@@ -2,15 +2,9 @@ from main import main
 import os
 from rich.text import Text
 from rich.console import Console
+from tools import clear_console
 
 def init():
-    def clear_console():
-        # For Windows
-        if os.name == 'nt':
-            os.system('cls')
-        # For Mac and Linux (os.name is 'posix')
-        else:
-            os.system('clear')
     clear_console()
     console = Console()
     if os.getenv("API_KEY") == None and os.getenv("ORG_ID") == None:

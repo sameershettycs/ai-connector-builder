@@ -14,7 +14,6 @@ embeddings = OllamaEmbeddings(
 console = Console()
 class CustomPromptAnalysisTool:
     def __init__(self):
-        # You can extend this with more sophisticated NLP models or keyword extraction logic
         self.keywords = {
             'action': ['action', 'run'],
             'lookup': ['lookup'],
@@ -23,15 +22,11 @@ class CustomPromptAnalysisTool:
         }
 
     def analyze(self, prompt):
-        # Analyze the prompt and determine all appropriate actions
         prompt_lower = prompt.lower()
-        matched_action_types = set()  # Using a set to ensure uniqueness
-
+        matched_action_types = set()
         for action_type, keywords in self.keywords.items():
             if any(keyword in prompt_lower for keyword in keywords):
                 matched_action_types.add(action_type)
-
-        # Return all matched action types as a list
         return {'action_types': list(matched_action_types)}
 
 def web_base_loader(url):
@@ -66,7 +61,14 @@ def extract_js_code_and_save(file_path, file_destination_path="./"):
             os.remove(file_path)
         else:
             print(f"    Warning: Original file {file_path} does not exist.")
-
         console.print(f"\n ✅ Formatted code has been saved to {full_destination_path}",style="bold green")
     except Exception as e:
         print(f"    An error occurred: {e}")
+
+def clear_console():
+        # For Windows
+    if os.name == 'nt':
+        os.system('cls')
+        # For Mac and Linux (os.name is 'posix')
+    else:
+        os.system('clear')

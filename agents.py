@@ -1,8 +1,8 @@
 from textwrap import dedent
 from crewai import Agent
-from langchain_ollama.chat_models import ChatOllama
 from langchain_openai import ChatOpenAI
 import os
+# from langchain_ollama.chat_models import ChatOllama
 
 # llm = ChatGoogleGenerativeAI(
 #     model="gemini-1.5-pro",
@@ -17,6 +17,7 @@ import os
 #     base_url="http://localhost:11434",
 # 	temperature=0.9,
 # )
+
 llm = ChatOpenAI(
     model="gpt-4o-mini",
     temperature=.2,
@@ -188,8 +189,6 @@ class ConnectorAgents():
 			llm=llm,
         allow_delegation=False,
         # tools=[tool]
-
-
 		)
 
 	def trigger_agent(self,tool=None):

@@ -3,14 +3,11 @@ load_dotenv()
 import os
 import pyfiglet
 from crewai import Crew , Process
-from tools import CustomPromptAnalysisTool, web_base_loader, extract_js_code_and_save
+from tools import CustomPromptAnalysisTool, web_base_loader, extract_js_code_and_save , clear_console
 from rich.text import Text
 from rich.console import Console
-from chromadb import PersistentClient as Client
-# from rich.spinner import Spinner
 
 
-# Define the tool to analyze the user prompt
 def main():
     console = Console()
     prompt_analysis_tool = CustomPromptAnalysisTool()
@@ -20,17 +17,7 @@ def main():
 
     tasks = ConnectorTasks()
     agents = ConnectorAgents()
-    # doc_tool = CustomCodeDocsSearchTool()
-    # https://developers.google.com/gmail/api/auth/scopes
-    client = Client()
 
-    def clear_console():
-        # For Windows
-        if os.name == 'nt':
-            os.system('cls')
-        # For Mac and Linux (os.name is 'posix')
-        else:
-            os.system('clear')
 
     clear_console()
     ascii_art = figlet.renderText('AI-CONNECTOR BUILDER')
@@ -42,16 +29,6 @@ def main():
     print(centered_title)
     styled_text = Text(model_name, style="bold magenta")
     console.print(styled_text)
-
-
-
-
-
-    # Create Agents
-    # action_agent = agents.action_agent(tool=doc_tool.CustomCodeDocsSearchTool(url="https://www.contentstack.com/docs/developers/apis/content-management-api#create-an-entry"))
-    # lookup_agent = agents.lookup_agent(tool=doc_tool.CustomCodeDocsSearchTool())
-    # trigger_agent = agents.trigger_agent(tool=doc_tool.CustomCodeDocsSearchTool())
-    # auth_agent = agents.auth_agent(tool=doc_tool.CustomCodeDocsSearchTool())
 
     def create_agent(agent_type, docLink=None):
         if agent_type == 'action':
@@ -65,9 +42,6 @@ def main():
         else:
             return None
 
-    # action.context = [loookup, trigger, auth]
-
-    # Define function to route tasks based on the user prompt
     def route_tasks_based_on_prompt(prompt, docLink=None):
         analysis_result = prompt_analysis_tool.analyze(prompt)
         agents_to_initialize = []
@@ -129,20 +103,22 @@ def main():
         if tasks_list is None:
                 console.print("    Please enter a meaningful prompt", style="bold red")
         else:
-            crew = Crew(
-                    agents=agentsList,
-                    tasks=tasks_list,
-                    process=Process.sequential,
-                    memory=True,
-                    embedder={
-                    "provider": "ollama",
-                        "config":{
-                            "model": "nomic-embed-text",
-                            "vector_dimension": 1024
+            console.print("\n\n")
+            with console.status("  Generating code...", spinner="arc"):
+                crew = Crew(
+                        agents=agentsList,
+                        tasks=tasks_list,
+                        process=Process.sequential,
+                        memory=True,
+                        embedder={
+                        "provider": "ollama",
+                            "config":{
+                                "model": "nomic-embed-text",
+                                "vector_dimension": 1024
+                            }
                         }
-                    }
-                )
-            crew.kickoff()
+                    )
+                crew.kickoff()
             dirPathText = Text()
             dirPathText.append("\n 📂 Enter the directory path to save the files: ", style="bold blue")
             dirPath = console.input(dirPathText);
