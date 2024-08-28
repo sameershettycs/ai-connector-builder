@@ -51,7 +51,7 @@ pip install -r requirements.txt
 
 ```
 
-5. Initialize the Project:
+5. Run the Project:
 
 ```bash
 
