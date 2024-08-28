@@ -1,7 +1,7 @@
 
 # AI-Connector-Builder
 
-Using `using gpt-4o-mini 🧠`
+Using `gpt-4o-mini 🧠`
 
 ## Getting started
 
